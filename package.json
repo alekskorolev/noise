@@ -1,0 +1,19 @@
+{
+  "name": "noise.chat",
+  "version": "1.0.0",
+  "author": "Serpteam <mail@serpteam.ru>",
+  "description": "Noise chat",
+  "license": "MIT",
+  "keywords": [],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/alekskorolev/noise"
+  },
+  "bugs": {
+    "url": "https://github.com/alekskorolev/noise/issues"
+  },
+  "homepage": "http://noise.serpteam.ru",
+  "dependencies": {
+    "hapi": "^8.4.0"
+  }
+}
