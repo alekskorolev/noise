@@ -1,3 +1,5 @@
+/*jslint browser: true, devel: true, node: true, nomen: true, es5: true*/
+/*global  angular, $ */
 var Hapi = require('hapi'),
   valid = require('joi');
 module.exports = function (config) {
@@ -31,8 +33,14 @@ module.exports = function (config) {
   server.register({
     register: require('lout')
   }, function (err) {});
+
+  server.register({
+    register: require('./plugins/model-factory'),
+    options: config.mongo
+  }, function (err) {});
+  
   console.log('start server');
   // Start the server
   server.start();
   return server;
-}
+};

@@ -1,14 +1,27 @@
+/*jslint browser: true, devel: true, node: true, nomen: true, es5: true*/
+/*global  angular, $, describe, after, it */
 var assert = require("assert"),
   should = require('should'),
-  server = require('../server/server.js');
+  Server = require('../server/server.js');
 
-describe('Begin test', function () {
-  var app = server({host: "localhost", port: 8812});
+describe('Server', function () {
+  "use strict";
+  var server = new Server({
+    host: "localhost",
+    port: 8812,
+    mongo: {
+      host: "localhost",
+      db: "testdb"
+    }
+  });
   after(function () {
-    app.stop();
+    server.stop();
   });
   it('should be started', function () {
-    var m = true
+    var m = true;
     assert.equal(true, m);
   });
+  
+  // test model-factory plugin
+  require('./model-factory')(server);
 });
