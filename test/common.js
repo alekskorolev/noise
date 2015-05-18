@@ -23,4 +23,10 @@ describe('Server', function () {
   
   // test model-factory plugin
   require('./model-factory')(server);
+  
+  // test geochat plugin
+  require('./geochat')(server);
+  
+  // test profiles plugin
+  require('./profiles')(server);
 });

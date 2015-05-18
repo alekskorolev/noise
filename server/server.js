@@ -39,6 +39,14 @@ module.exports = function (config) {
     options: config.mongo
   }, function (err) {});
   
+  server.register({
+    register: require('./plugins/geochat')
+  }, function (err) {});
+  
+  server.register({
+    register: require('./plugins/profiles')
+  }, function (err) {});
+  
   console.log('start server');
   // Start the server
   server.start();
