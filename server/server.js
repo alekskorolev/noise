@@ -33,7 +33,7 @@ module.exports = function (config) {
   server.register({
     register: require('lout')
   }, function (err) {});
-
+  
   server.register({
     register: require('./plugins/model-factory'),
     options: config.mongo

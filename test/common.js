@@ -18,8 +18,7 @@ describe('Server', function () {
     server.stop();
   });
   it('should be started', function () {
-    var m = true;
-    assert.equal(true, m);
+    var test = server.should.be.ok;
   });
   
   // test model-factory plugin

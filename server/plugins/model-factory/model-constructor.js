@@ -3,7 +3,7 @@
 
 var mongoose = require('mongoose');
 // model constructor
-var Model = function (options) {
+var Model = function (options, server) {
   "use strict";
   if (typeof (options.pattern) === "function") {
     this.pattern = options.pattern(mongoose);
@@ -15,5 +15,4 @@ var Model = function (options) {
   this.Model = mongoose.model(this.name, this.Schema);
 };
 Model.prototype = require('./model-proto');
-
 module.exports = Model;

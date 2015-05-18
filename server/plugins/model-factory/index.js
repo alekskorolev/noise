@@ -5,7 +5,10 @@ var plugin = function (server, options, next) {
   "use strict";
   var Model = require('./model-constructor'),
     models = {};
-  
+  Model.prototype.deferred = function () {
+    //console.log(server.plugins.promise);
+    return new server.plugins.promise.Deferred();
+  };
   mongoose.connect("mongodb://" + options.host + '/' + options.db);
   
   // model creator
@@ -15,8 +18,7 @@ var plugin = function (server, options, next) {
     var model = models[options.name];
     
     if (!model) { // if not exist => create new model
-      model = new Model(options);
-      
+      model = new Model(options, server);
       // add model to models pool
       models[options.name] = model;
     }
