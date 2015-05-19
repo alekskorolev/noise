@@ -12,6 +12,9 @@ var Model = function (options, server) {
   }
   this.name = options.name;
   this.Schema = new mongoose.Schema(this.pattern);
+  if (options.index) {
+    this.Schema.index(options.index);
+  }
   this.Model = mongoose.model(this.name, this.Schema);
 };
 Model.prototype = require('./model-proto');

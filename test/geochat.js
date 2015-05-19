@@ -21,20 +21,25 @@ module.exports = function (server) {
       state = plugin.listener.should.be.a.Function;
     });
     describe('method subscribe', function () {
+      
       it('should be return promise', function () {
-        plugin.subscribe().should.have.property('then');      
+        plugin.subscribe().should.have.property('then');
         state = plugin.subscribe().then.should.be.a.Function;
       });
+      /*it('should be create listener', function () {
+        
+      
+      });*/
     });
     describe('method send', function () {
       it('should be return promise', function () {
-        plugin.send().should.have.property('then');      
+        plugin.send().should.have.property('then');
         state = plugin.send().then.should.be.a.Function;
       });
     });
     describe('method listener', function () {
       it('should be return promise', function () {
-        plugin.listener().should.have.property('then');      
+        plugin.listener().should.have.property('then');
         state = plugin.listener().then.should.be.a.Function;
       });
     });
