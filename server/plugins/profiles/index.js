@@ -25,7 +25,8 @@ var plugin = function (server, options, next) {
       return deferred.promise;
     };
   server.expose('model', model);
-  
+  server.expose('get', get);
+  server.expose('update', update);
   return next();
 };
 plugin.attributes = {

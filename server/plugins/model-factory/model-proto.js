@@ -5,24 +5,28 @@ module.exports = {
   save: function (doc) {
     "use strict";
     var deferred = new Deferred();
-    if (doc._id) {
-      this.Model.findByIdAndUpdate(doc._id, { $set: doc}, function (err, model) {
-        if (err) {
-          deferred.reject(err);
-        } else if (!model) {
-          deferred.reject(new Error('Model not found'));
-        } else {
-          deferred.resolve(model);
-        }
-      });
+    if (doc) {
+      if (doc._id) {
+        this.Model.findByIdAndUpdate(doc._id, { $set: doc}, function (err, model) {
+          if (err) {
+            deferred.reject(err);
+          } else if (!model) {
+            deferred.reject(new Error('Model not found'));
+          } else {
+            deferred.resolve(model);
+          }
+        });
+      } else {
+        this.Model.create(doc, function (err, model) {
+          if (err) {
+            deferred.reject(err);
+          } else {
+            deferred.resolve(model);
+          }
+        });
+      }
     } else {
-      this.Model.create(doc, function (err, model) {
-        if (err) {
-          deferred.reject(err);
-        } else {
-          deferred.resolve(model);
-        }
-      });
+      deferred.reject(new Error('Saved data is empty'));
     }
     return deferred.promise;
   },
