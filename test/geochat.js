@@ -26,10 +26,10 @@ module.exports = function (server) {
         plugin.subscribe().should.have.property('then');
         state = plugin.subscribe().then.should.be.a.Function;
       });
-      /*it('should be create listener', function () {
+      it('should be create listener', function () {
         
       
-      });*/
+      });
     });
     describe('method send', function () {
       it('should be return promise', function () {

@@ -1,7 +1,10 @@
 <Page xmlns="http://www.nativescript.org/tns.xsd" loaded="pageLoaded">
-  <StackLayout>
-    <Label text="Tap the button" cssClass="title"/>
-    <Button text="TAP" tap="{{ tapAction }}" />
-    <Label text="{{ message }}" cssClass="message" textWrap="true"/>
-  </StackLayout>
+  <ListView items="{{ msgs }}">
+    <ListView.itemTemplate>
+      <DockLayout stretchLastChild="true" >
+        <Image src="~/img/logo.png" stretch="none" class="msg-user-ava"/> 
+        <Button text="fill" style ="background-color: wheat; margin: 5;"/ >
+      </DockLayout>
+    </ListView.itemTemplate>
+  </ListView>
 </Page>

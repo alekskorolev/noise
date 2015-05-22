@@ -15,6 +15,7 @@
 /home/aleksandr/projects/noise/napp/platforms/android/assets/metadata \
 /home/aleksandr/projects/noise/napp/platforms/android/assets/internal/prepareExtend.js \
 /home/aleksandr/projects/noise/napp/platforms/android/assets/app/main-page.js \
+/home/aleksandr/projects/noise/napp/platforms/android/assets/app/img \
 /home/aleksandr/projects/noise/napp/platforms/android/assets/app/main-page.xml \
 /home/aleksandr/projects/noise/napp/platforms/android/assets/app/app.css \
 /home/aleksandr/projects/noise/napp/platforms/android/assets/app/LICENSE \
@@ -22,6 +23,7 @@
 /home/aleksandr/projects/noise/napp/platforms/android/assets/app/main-view-model.js \
 /home/aleksandr/projects/noise/napp/platforms/android/assets/app/tns_modules \
 /home/aleksandr/projects/noise/napp/platforms/android/assets/app/package.json \
+/home/aleksandr/projects/noise/napp/platforms/android/assets/app/img/logo.png \
 /home/aleksandr/projects/noise/napp/platforms/android/assets/app/tns_modules/xml \
 /home/aleksandr/projects/noise/napp/platforms/android/assets/app/tns_modules/ui \
 /home/aleksandr/projects/noise/napp/platforms/android/assets/app/tns_modules/application-settings \
