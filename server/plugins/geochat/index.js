@@ -30,13 +30,23 @@ var plugin = function (server, options, next) {
       return deferred.promise;
     },
     send = function (id, msg, point) {
-      var deferred = new promise.Deferred();
+      var deferred = new promise.Deferred(),
+        key;
       console.log(id, msg, point);
       msgs.save({
         uid: id,
         msg: msg,
         pos: point
       }).then(deferred.resolve, deferred.reject);
+      for (key in listeners) {
+        if (listeners.hasOwnProperty(key)) {
+          listeners[key].emit('newmsgs', {
+            uid: id,
+            msg: msg,
+            pos: point
+          });
+        }
+      }
       return deferred.promise;
     },
     listener = function (point, radius) {
@@ -84,11 +94,31 @@ var plugin = function (server, options, next) {
       path: '/geochat/subscribe/{uid?}',
       config: {
         plugins: {
-          'hapi-io': 'subscribe'
+          'hapi-io': {
+            event: 'subscribe',
+            post: function (ctx, next) {
+              peoples
+                .save({
+                  uid: ctx.data.uid,
+                  pos: ctx.data.point,
+                  sid: ctx.socket.id
+                })
+                .then(function (people) {
+                  ctx.result = { success: true, result: people};
+                  next();
+                }, function (err) {
+                  ctx.result = { success: false, error: err};
+                  next();
+                });
+              
+              var prop;
+              listeners[ctx.socket.id] = ctx.socket;
+            }
+          }
         }
       },
       handler: function (request, reply) {
-        console.log(request.params.uid);
+        reply({});
       }
     }
   ]);

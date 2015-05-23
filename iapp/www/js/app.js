@@ -24,9 +24,24 @@ window.angular.module('starter', ['ionic'])
       }
     });
   })
-  .factory('$socket', ['$window', function ($window) {
+  .factory('$socket', ['$window', '$localstorage', function ($window, $localstorage) {
     "use strict";
-    var socket = $window.io();
+    var socket = $window.io('http://localhost:8811');
+    socket.emit('subscribe', {
+      uid: $localstorage.get('userkey', "guest"),
+      point: 30
+    }, function (data) {
+      console.log(data);
+    });
+    socket.on('newmsgs', function (data) {
+      console.log(data);
+    });
+    return {
+      get: function () {
+      },
+      on: function () {
+      }
+    };
   }])
   .factory('$localstorage', ['$window', function ($window) {
     "use strict";
@@ -45,7 +60,7 @@ window.angular.module('starter', ['ionic'])
       }
     };
   }])
-  .factory('$msger', ['$localstorage', '$http', function ($localstorage, $http) {
+  .factory('$msger', ['$localstorage', '$http', '$socket', function ($localstorage, $http, $socket) {
     "use strict";
     var msgs;
     return {
