@@ -8,7 +8,10 @@ module.exports = function (config) {
   var server = new Hapi.Server();
   server.connection({
     host: config.host || 'localhost',
-    port: config.port || 8000
+    port: config.port || 8000,
+    routes: {
+      cors: true
+    }
   });
 
   // Add the route
@@ -29,6 +32,10 @@ module.exports = function (config) {
       },
     }
   });
+  
+  server.register({
+    register: require('hapi-io')
+  }, function (err) {});
 
   server.register({
     register: require('lout')

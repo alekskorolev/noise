@@ -7,19 +7,107 @@
 // the 2nd parameter is an array of 'requires'
 window.angular.module('starter', ['ionic'])
 
-  .run(function ($ionicPlatform) {
+  .run(function ($ionicPlatform, $localstorage, $hashkey, $http) {
     "use strict";
     $ionicPlatform.ready(function () {
       // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
       // for form inputs)
+      var userkey = $localstorage.get('userkey', false);
       if (window.cordova && window.cordova.plugins.Keyboard) {
         window.cordova.plugins.Keyboard.hideKeyboardAccessoryBar(true);
       }
       if (window.StatusBar) {
         window.StatusBar.styleDefault();
       }
+      if (!userkey) {
+        $localstorage.set('userkey', $hashkey.gen());
+      }
     });
   })
+  .factory('$socket', ['$window', function ($window) {
+    "use strict";
+    var socket = $window.io();
+  }])
+  .factory('$localstorage', ['$window', function ($window) {
+    "use strict";
+    return {
+      set: function (key, value) {
+        $window.localStorage[key] = value;
+      },
+      get: function (key, defaultValue) {
+        return $window.localStorage[key] || defaultValue;
+      },
+      setObject: function (key, value) {
+        $window.localStorage[key] = JSON.stringify(value);
+      },
+      getObject: function (key) {
+        return JSON.parse($window.localStorage[key] || '{}');
+      }
+    };
+  }])
+  .factory('$msger', ['$localstorage', '$http', function ($localstorage, $http) {
+    "use strict";
+    var msgs;
+    return {
+      restore: function () {
+        msgs = $localstorage.getObject('msgs');
+        msgs.list = msgs.list || [];
+        // create listener from server messages
+        return msgs;
+      },
+      clear: function () {
+        $localstorage.setObject('msgs', {list: []});
+      },
+      recieve: function (newmsgs) {
+        
+      },
+      send: function (msg) {
+        var store = {
+          body: msg.body,
+          profile: {
+            avatar: "img/logo.jpg"
+          },
+          myself: true
+        };
+        if (msgs.list.length > 49) {
+          msgs.list.shift();
+        }
+        
+        msgs.list.push(store);
+        $localstorage.setObject('msgs', msgs);
+        $http.post('http://localhost:8811/geochat', {
+          msg: msg.body,
+          uid: msg.uid,
+          point: [0, 0]
+        })
+          .success(function (data, status, headers, config) {
+            store.sended = true;
+            store.uid = data.result.uid;
+            $localstorage.setObject('msgs', msgs);
+            console.log(data);
+          })
+          .error(function (data, status, headers, config) {
+            console.log(data);
+          });
+        msg.sended = true;
+        return msg;
+      }
+    };
+  }])
+  .factory('$hashkey', [ function () {
+    "use strict";
+    return {
+      gen: function () {
+        var d = new Date().getTime(),
+          code = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+            var r = (d + Math.random() * 16) % 16 | 0;
+            d = Math.floor(d / 16);
+            return (c === 'x' ? r : (r & 0x7 | 0x8)).toString(16);
+          });
+        return code;
+      }
+    };
+  }])
 /*  .config(["$routeProvider", function ($routeProvider) {
     "use strict";
     $routeProvider
@@ -29,22 +117,28 @@ window.angular.module('starter', ['ionic'])
         controllerAs: "chatCtrl"
       });
   }])*/
-  .controller("chatCtrl", ["$scope", "$rootScope", '$ionicScrollDelegate', function ($scope, $rootScope, $ionicScrollDelegate) {
+  .controller("chatCtrl", ["$scope", "$rootScope", '$ionicScrollDelegate', '$msger', '$timeout', function ($scope, $rootScope, $ionicScrollDelegate, $msger, $timeout) {
     "use strict";
-    $scope.msgs = [
+/*    $scope.msgs = [
       {title: "Message one", profile: { avatar: "img/logo.jpg"}},
       {title: "Message two", profile: { avatar: "img/logo.jpg"}, myself: true},
       {title: "Message thre", profile: { avatar: "img/logo.jpg"}},
       {title: "Message four", profile: { avatar: "img/logo.jpg"}}
-    ];
+    ];*/
+    //$msger.clear();
+    $scope.msgs = $msger.restore();
     $scope.$on('sendMessage', function ($evnt, $args) {
-      $scope.msgs.push($args.msg);
+      $msger.send($args.msg);
+      /*$scope.msgs.push($args.msg);*/
       if (!$scope.$phase) {
         $scope.$apply();
       }
       /*window.scrollTo(0,document.getElementById('autoScroll').height)*/
       $ionicScrollDelegate.scrollBottom({shouldAnimate: true});
     });
+    $timeout(function () {
+      $ionicScrollDelegate.scrollBottom();
+    }, 50);
   }])
   .controller("startCtrl", ["$scope", function ($scope) {
     "use strict";
@@ -79,7 +173,7 @@ window.angular.module('starter', ['ionic'])
       }
     };
   }])
-  .directive('sendMessage', ['$rootScope', function ($rootScope) {
+  .directive('sendMessage', ['$rootScope', '$localstorage', function ($rootScope, $localstorage) {
     "use strict";
     return {
       restrict: "A",
@@ -89,9 +183,8 @@ window.angular.module('starter', ['ionic'])
           .on(window.cordova ? 'touchend' : 'click', function ($evnt) {
             $rootScope.$broadcast('sendMessage',
               { msg: {
-                title: $element.find('input').val(),
-                profile: { avatar: "img/logo.jpg"},
-                myself: true
+                body: $element.find('input').val(),
+                uid: $localstorage.get('userkey', "guest")
               }});
             $element.find('input').val('');
 //            console.log($element.find('input').val()); 

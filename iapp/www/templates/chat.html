@@ -1,7 +1,7 @@
 <ul class="msg-list" id="autoScroll">
-  <li ng-repeat="msg in msgs" class="msg" ng-class="msg.myself?'myself':''">
+  <li ng-repeat="msg in msgs.list track by $index" class="msg" ng-class="msg.myself?'myself':''">
     <img class="avatar" ng-src="{{msg.profile.avatar}}"/>
-    <span class="text" ng-bind="msg.title"> </span>
+    <span class="text" ng-bind="msg.body"> </span>
     <div></div>
   </li>
 </ul>

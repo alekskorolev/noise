@@ -6,9 +6,8 @@ module.exports = {
     pattern: function (odm) {
       "use strict";
       return {
-        title:  String,
-        author: odm.Schema.Types.ObjectId,
-        body:   String,
+        uid: String,
+        msg:   String,
         date: { type: Date, default: Date.now },
         pos: { type: [Number], default: [0, 0] }
       };
@@ -20,7 +19,7 @@ module.exports = {
     pattern: function (odm) {
       "use strict";
       return {
-        uid: {type: odm.Schema.Types.ObjectId, index: true},
+        uid: {type: String, index: true},
         pos: { type: [Number], default: [0, 0] },
         sid: { type: String, default: ""}
       };
