@@ -26,7 +26,7 @@ window.angular.module('starter', ['ionic'])
   })
   .factory('$socket', ['$window', '$localstorage', function ($window, $localstorage) {
     "use strict";
-    var socket = $window.io('http://192.168.56.1:8811');
+    var socket = $window.io('http://noise.alesan.ru');
     socket.emit('subscribe', {
       uid: $localstorage.get('userkey', "guest"),
       point: 30
@@ -90,7 +90,7 @@ window.angular.module('starter', ['ionic'])
         
         msgs.list.push(store);
         $localstorage.setObject('msgs', msgs);
-        $http.post('http://192.168.56.1:8811/geochat', {
+        $http.post('http://noise.alesan.ru/geochat', {
           msg: msg.body,
           uid: msg.uid,
           point: [0, 0]
