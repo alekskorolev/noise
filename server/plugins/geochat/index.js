@@ -90,8 +90,8 @@ var plugin = function (server, options, next) {
       }
     },
     {
-      method: 'GET',
-      path: '/geochat/subscribe/{uid?}',
+      method: 'POST',
+      path: '/geochat/subscribe',
       config: {
         plugins: {
           'hapi-io': {

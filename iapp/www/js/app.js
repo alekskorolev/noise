@@ -26,7 +26,7 @@ window.angular.module('starter', ['ionic'])
   })
   .factory('$socket', ['$window', '$localstorage', function ($window, $localstorage) {
     "use strict";
-    var socket = $window.io('http://localhost:8811');
+    var socket = $window.io('http://192.168.56.1:8811');
     socket.emit('subscribe', {
       uid: $localstorage.get('userkey', "guest"),
       point: 30
@@ -90,7 +90,7 @@ window.angular.module('starter', ['ionic'])
         
         msgs.list.push(store);
         $localstorage.setObject('msgs', msgs);
-        $http.post('http://localhost:8811/geochat', {
+        $http.post('http://192.168.56.1:8811/geochat', {
           msg: msg.body,
           uid: msg.uid,
           point: [0, 0]
@@ -99,10 +99,10 @@ window.angular.module('starter', ['ionic'])
             store.sended = true;
             store.uid = data.result.uid;
             $localstorage.setObject('msgs', msgs);
-            console.log(data);
+            alert("succ", status);
           })
           .error(function (data, status, headers, config) {
-            console.log(data);
+            alert(JSON.stringify(status));
           });
         msg.sended = true;
         return msg;
@@ -155,8 +155,11 @@ window.angular.module('starter', ['ionic'])
       $ionicScrollDelegate.scrollBottom();
     }, 50);
   }])
-  .controller("startCtrl", ["$scope", function ($scope) {
+  .controller("startCtrl", ["$scope", '$timeout', '$ionicScrollDelegate', function ($scope, $timeout, $ionicScrollDelegate) {
     "use strict";
+    $timeout(function () {
+      $ionicScrollDelegate.scrollTop();
+    }, 50);
   }])
   .directive("stateTouch", ['$state', '$rootScope', function ($state, $rootScope) {
     "use strict";
