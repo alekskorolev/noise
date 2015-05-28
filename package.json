@@ -14,7 +14,11 @@
   },
   "homepage": "http://noise.serpteam.ru",
   "dependencies": {
-    "hapi": "^8.4.0",
-    "hapi-io": "0.0.6"
+    "hapi": "^8.5.1",
+    "hapi-io": "0.0.6",
+    "joi": "^6.4.2",
+    "lout": "^6.2.2",
+    "mongoose": "^4.0.3",
+    "promised-io": "^0.3.5"
   }
 }

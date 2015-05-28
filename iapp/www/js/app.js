@@ -24,11 +24,12 @@ window.angular.module('starter', ['ionic'])
       }
     });
   })
-  .factory('$socket', ['$window', '$localstorage', function ($window, $localstorage) {
+  .factory('$socket', ['$window', '$localstorage', '$hashkey', function ($window, $localstorage, $hashkey) {
     "use strict";
-    var socket = $window.io('http://noise.alesan.ru');
+    var socket = $window.io('http://noise.alesan.ru'),
+      userkey = $localstorage.get('userkey', $hashkey.gen());
     socket.emit('subscribe', {
-      uid: $localstorage.get('userkey', "guest"),
+      uid: userkey,
       point: 30
     }, function (data) {
       console.log(data);
@@ -50,7 +51,12 @@ window.angular.module('starter', ['ionic'])
         $window.localStorage[key] = value;
       },
       get: function (key, defaultValue) {
-        return $window.localStorage[key] || defaultValue;
+        var value = $window.localStorage[key];
+        if (!value) {
+          value = defaultValue;
+          $window.localStorage[key] = value;
+        }
+        return value;
       },
       setObject: function (key, value) {
         $window.localStorage[key] = JSON.stringify(value);
@@ -77,7 +83,8 @@ window.angular.module('starter', ['ionic'])
         
       },
       send: function (msg) {
-        var store = {
+        var xmlhttp,
+          store = {
           body: msg.body,
           profile: {
             avatar: "img/logo.jpg"
@@ -99,10 +106,9 @@ window.angular.module('starter', ['ionic'])
             store.sended = true;
             store.uid = data.result.uid;
             $localstorage.setObject('msgs', msgs);
-            alert("succ", status);
           })
           .error(function (data, status, headers, config) {
-            alert(JSON.stringify(status));
+          console.log('error');
           });
         msg.sended = true;
         return msg;
@@ -148,7 +154,6 @@ window.angular.module('starter', ['ionic'])
       if (!$scope.$phase) {
         $scope.$apply();
       }
-      /*window.scrollTo(0,document.getElementById('autoScroll').height)*/
       $ionicScrollDelegate.scrollBottom({shouldAnimate: true});
     });
     $timeout(function () {
@@ -191,21 +196,20 @@ window.angular.module('starter', ['ionic'])
       }
     };
   }])
-  .directive('sendMessage', ['$rootScope', '$localstorage', function ($rootScope, $localstorage) {
+  .directive('sendMessage', ['$rootScope', '$localstorage','$hashkey', function ($rootScope, $localstorage, $hashkey) {
     "use strict";
     return {
       restrict: "A",
       controller: function ($scope, $element, $attrs) {
-        console.log($element.children()[1]);
         $element.find('button')
           .on(window.cordova ? 'touchend' : 'click', function ($evnt) {
+            var userkey = $localstorage.get('userkey', $hashkey.gen());
             $rootScope.$broadcast('sendMessage',
               { msg: {
                 body: $element.find('input').val(),
-                uid: $localstorage.get('userkey', "guest")
+                uid: userkey
               }});
             $element.find('input').val('');
-//            console.log($element.find('input').val()); 
           });
       }
     };
